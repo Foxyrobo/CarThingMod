@@ -9,7 +9,8 @@ Several different physics components, like velocity, mass, drag, etc. can be cha
 The cars can be deleted by pressing 'p' (can be changed in settings)
 
 The setting labeled "Use continuous collision?" refers to the collision detection mode.
-By default this is off, meaning the cars use discrete collision. In english, this means cars can clip through walls if they are fast enough.
+By default this is off, meaning the cars use discrete collision. 
+In english, this means cars can clip through walls if they are fast enough.
 If this is turned on, cars can no longer do that. The only downside is this uses more processing power, so your game will start to lag sooner than it would with this off. Although in my testing, this only comes up if you have spawned a lot of cars.
 
 Mod by Foxyrobo
