@@ -3,7 +3,7 @@
     <!-- Change this to the path of your modded HK installation -->
     <HollowKnightRefs>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\</HollowKnightRefs>
     <!-- Change this to the path where you want the ready-to-upload exports to be -->
-    <ExportDir>C:\Users\timmy_000\Desktop\Hollow Knight Mods\Exports\</ExportDir>
+    <ExportDir>C:\Users\(USERNAME)\Desktop\Hollow Knight Mods\Exports\</ExportDir>
     <!-- Uncomment this to generate a documentation file to be included with the mod -->
     <!--<DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>-->
   </PropertyGroup>
