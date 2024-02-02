@@ -13,7 +13,7 @@ namespace CarThingMod
         internal static GlobalSettings GS = new GlobalSettings();
         new public string GetName() => "Car Thing Mod";
         //Version number: MAJOR.MINOR.PATCH-PRERELEASE
-        public override string GetVersion() => "0.3.10-beta.2";
+        public override string GetVersion() => "0.3.10-beta.3";
 
         Menu MenuRef;
 
