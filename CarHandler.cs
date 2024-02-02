@@ -185,19 +185,21 @@ public class CarHandler : MonoBehaviour
         GameObject IdleGo = new GameObject("CarSpriteCollection");
 
         int num_frames = 1;
-        float width = (float)Idle.height;
-        float height = (float)Idle.height;
+        float width = Idle.height;
+        float height = Idle.height;
         string[] names = new string[num_frames];
         Rect[] rects = new Rect[num_frames];
         Vector2[] anchors = new Vector2[num_frames];
         for (int i = 0; i < num_frames; i++)
         {
             names[i] = i.ToString();
-            rects[i] = new Rect(width * (float)i, 0, width, height);
+            rects[i] = new Rect(width * i, 0, width, height);
             anchors[i] = new Vector2(140f, 128f);
         }
         // https://github.com/RedFrog6002/FrogCore/
-        carSpriteCollection = FrogCore.Utils.CreateFromTexture(IdleGo, Idle, tk2dSpriteCollectionSize.PixelsPerMeter(128f), new Vector2(width * num_frames, height), names, rects, null, anchors, new bool[num_frames]);
+        carSpriteCollection = FrogCore.Utils.CreateFromTexture(IdleGo, Idle, 
+			tk2dSpriteCollectionSize.PixelsPerMeter(128f), new Vector2(width * num_frames, height), 
+			names, rects, null, anchors, new bool[num_frames]);
         carSpriteCollection.hasPlatformData = false;
         Modding.Logger.Log("[CarThingMod] Created Collections!", CarThingMod.GS.LogLevel);
 
