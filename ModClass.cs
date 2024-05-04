@@ -12,8 +12,8 @@ namespace CarThingMod
     {
         internal static GlobalSettings GS = new GlobalSettings();
         new public string GetName() => "Car Thing Mod";
-        //Version number: MAJOR.MINOR.PATCH-PRERELEASE
-        public override string GetVersion() => "1.0.0";
+        //Version number: MAJOR.MINOR.PATCH.BUILD
+        public override string GetVersion() => "1.1.0.9";
 
         Menu MenuRef;
 
@@ -260,6 +260,32 @@ namespace CarThingMod
                         loadValue: () => GS.carBounciness, //to load the value on menu creation
                         minValue: 0,
                         maxValue: 1,
+                        wholeNumbers: false),
+
+                    //Float - Scale X
+                    new CustomSlider(
+                        name: "Car scale X",
+                        Id: "scaleX",
+                        storeValue: val => // to store the value when the slider is changed by user
+                        {
+                            GS.carScaleX = val;
+                        },
+                        loadValue: () => GS.carScaleX, //to load the value on menu creation
+                        minValue: 0.1f,
+                        maxValue: 5,
+                        wholeNumbers: false),
+
+                    //Float - Scale Y
+                    new CustomSlider(
+                        name: "Car scale Y",
+                        Id: "scaleY",
+                        storeValue: val => // to store the value when the slider is changed by user
+                        {
+                            GS.carScaleY = val;
+                        },
+                        loadValue: () => GS.carScaleY, //to load the value on menu creation
+                        minValue: 0.1f,
+                        maxValue: 5,
                         wholeNumbers: false),
 
                     //Text - Advanced header

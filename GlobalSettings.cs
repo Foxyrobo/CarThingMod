@@ -24,6 +24,8 @@ namespace CarThingMod
         public float carAngularDrag = 0.05f;
         public float carFriction = 0.35f;
         public float carBounciness = 0.7f;
+        public float carScaleX = 1.0f;
+        public float carScaleY = 1.0f;
 
         //Advanced
         public bool useContinuousCollision = false;

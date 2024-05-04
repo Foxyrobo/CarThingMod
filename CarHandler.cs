@@ -10,6 +10,8 @@ using FrogCore;
 using HutongGames.PlayMaker;
 using Modding;
 using System.Collections.Generic;
+using GlobalEnums;
+using IL;
 
 namespace CarThingMod;
 public class CarHandler : MonoBehaviour
@@ -77,20 +79,32 @@ public class CarHandler : MonoBehaviour
 
 	GameObject SpawnCarFromKnight(float forceX, float forceY)
 	{
-		//Hollow Knight direction
+		//Hollow Knight direction (horizontal)
 		float directionMultiplierX = (HeroController.instance.cState.facingRight) ? 1f : -1f;
 		float wallClimbMultiplier = (HeroController.instance.cState.wallSliding) ? -1f : 1f;
-		directionMultiplierX *= wallClimbMultiplier;
+        directionMultiplierX *= wallClimbMultiplier;
+
+		//Hollow Knight direction (vertical)
+        float verticalMult = 1f;
+		//if (HeroController.instance.cState.lookingUp)
+		//{
+		//	verticalMult = 2f;
+		//}
+		//else if (HeroController.instance.cState.lookingDown)
+		//{
+		//	verticalMult = -2f;
+		//}
 
 		//Instantiate new car object
 		carObject = Instantiate(carPrefab, HeroController.instance.transform.position
-			- new Vector3(directionMultiplierX * -0.4f, 0.75f, 0), new Quaternion(0, 0, 0, 0));
+			- new Vector3(directionMultiplierX * -0.4f, 0.75f * verticalMult, 0), new Quaternion(0, 0, 0, 0));
 
 		//Manually inject sprite collection
 		carObject.GetComponent<tk2dAnimatedSprite>().Collection = carSpriteCollection;
 
 		//Make active
 		carObject.SetActive(true);
+		//carObject.layer = (int)PhysLayers.TERRAIN;
 		carObject.layer = 0;
 
         //Change the object's physics material
@@ -98,16 +112,32 @@ public class CarHandler : MonoBehaviour
         physMat.friction = CarThingMod.GS.carFriction;
         physMat.bounciness = CarThingMod.GS.carBounciness;
         carObject.GetComponent<Rigidbody2D>().sharedMaterial = physMat;
-        carObject.GetComponent<Rigidbody2D>().mass = CarThingMod.GS.carMass;
-        carObject.GetComponent<Rigidbody2D>().drag = CarThingMod.GS.carDrag;
-        carObject.GetComponent<Rigidbody2D>().angularDrag = CarThingMod.GS.carAngularDrag;
+
+		//Set other physics components
+        carObject.GetComponent<Rigidbody2D>().mass = CarThingMod.GS.carMass; //Mass
+        carObject.GetComponent<Rigidbody2D>().drag = CarThingMod.GS.carDrag; //Linear drag
+        carObject.GetComponent<Rigidbody2D>().angularDrag = CarThingMod.GS.carAngularDrag; //Angular drag
 		//Load 0 (continuous) if true, else load 1 (discrete)
 		carObject.GetComponent<Rigidbody2D>().collisionDetectionMode = 
 			CarThingMod.GS.useContinuousCollision ? CollisionDetectionMode2D.Continuous : 
 			CollisionDetectionMode2D.Discrete;
+        carObject.transform.SetScaleX(CarThingMod.GS.carScaleX); //Horizontal scale
+        carObject.transform.SetScaleY(CarThingMod.GS.carScaleY); //Vertical scale
 
+		//Check if the knight is facing up, down, or neither
+		Vector2 carForce = new Vector2(forceX * directionMultiplierX, forceY);
+        /*if (HeroController.instance.cState.upAttacking)
+		{
+            carForce = new Vector2(0f, forceY);
+            Modding.Logger.Log("[CarThingMod] Send upward with force " + forceY, CarThingMod.GS.LogLevel);
+        }
+		if (HeroController.instance.cState.downAttacking)
+		{
+            carForce = new Vector2(0f, -forceY);
+			Modding.Logger.Log("[CarThingMod] Send downward with force " + -forceY, CarThingMod.GS.LogLevel);
+        }*/
         //Add force
-        carObject.GetComponent<Rigidbody2D>().velocity = new Vector2(forceX * directionMultiplierX, forceY);
+        carObject.GetComponent<Rigidbody2D>().velocity = carForce;
 
 		//Add car to list
 		cars.Add(carObject);
@@ -169,8 +199,8 @@ public class CarHandler : MonoBehaviour
 		// FSM seems some hollow knight specific
         // Adding this so it appears blue on debug mod
         // https://github.com/TheMulhima/HollowKnight.DebugMod/blob/master/Source/Hitbox/HitboxRender.cs#L103
-        PlayMakerFSM fsm = carPrefab.GetComponent<PlayMakerFSM>();
-        fsm.FsmName = "damages_enemy";
+        //PlayMakerFSM fsm = carPrefab.GetComponent<PlayMakerFSM>();
+        //fsm.FsmName = "damages_enemy";
 
 		//Not active
 		carPrefab.SetActive(false);
