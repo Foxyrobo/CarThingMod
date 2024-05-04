@@ -199,8 +199,8 @@ public class CarHandler : MonoBehaviour
 		// FSM seems some hollow knight specific
         // Adding this so it appears blue on debug mod
         // https://github.com/TheMulhima/HollowKnight.DebugMod/blob/master/Source/Hitbox/HitboxRender.cs#L103
-        //PlayMakerFSM fsm = carPrefab.GetComponent<PlayMakerFSM>();
-        //fsm.FsmName = "damages_enemy";
+        PlayMakerFSM fsm = carPrefab.GetComponent<PlayMakerFSM>();
+		fsm.FsmName = "health_manager"; //Not a great way of doing this, but oh well
 
 		//Not active
 		carPrefab.SetActive(false);
