@@ -12,8 +12,8 @@ namespace CarThingMod
     {
         internal static GlobalSettings GS = new GlobalSettings();
         new public string GetName() => "Car Thing Mod";
-        //Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.1.1.1";
+        // Version number: MAJOR.MINOR.PATCH.BUILD
+        public override string GetVersion() => "1.2.1.4";
 
         Menu MenuRef;
 
@@ -25,13 +25,13 @@ namespace CarThingMod
             ModHooks.LanguageGetHook += LanguageGet;
         }
 
-        //Called when the player swings the nail
+        // Called when the player swings the nail
         private void ModHooks_AttackHook(GlobalEnums.AttackDirection obj)
         {
-            //First, check if this is enabled
+            // First, check if this is enabled
             if (GS.spawnCarOnSwing)
             {
-                //Spawn a car with velocity
+                // Spawn a car with velocity
                 HeroController.instance.GetComponent<CarHandler>().Run(GS.swingForceX, GS.swingForceY);
             }
         }
@@ -44,13 +44,13 @@ namespace CarThingMod
 
         public void OnHeroUpdate()
         {
-            //Check if the spawn car key was pressed
+            // Check if the spawn car key was pressed
             if (GS.KeyBinds.spawnCar.WasPressed)
             {
                 HeroController.instance.GetComponent<CarHandler>().Run(GS.keyForceX, GS.keyForceY);
             }
 
-            //Check if the delete all cars key was pressed
+            // Check if the delete all cars key was pressed
             if (GS.KeyBinds.deleteAllCars.WasPressed)
             {
                 HeroController.instance.GetComponent<CarHandler>().DeleteAllCars();
@@ -59,35 +59,35 @@ namespace CarThingMod
 
         public string LanguageGet(string key, string sheetTitle, string orig)
         {
-            //Make elderbug say "pee pee poo poo" when he's exhausted his dialogue
+            // Make elderbug say "pee pee poo poo" when he's exhausted his dialogue
             if (key == "ELDERBUG_GENERIC_2" && sheetTitle == "Elderbug")
             {
                 return "pee pee poo poo";
             }
 
-            //When exhausting Iselda's dialogue (behind the counter), make her say "balls"
+            // When exhausting Iselda's dialogue (behind the counter), make her say "balls"
             if (key == "ISELDA_REPEAT" && sheetTitle == "Iselda")
             {
                 return "balls";
             }
 
-            //Make Quirrel's name be "Plural"
+            // Make Quirrel's name be "Plural"
             if (key == "QUIRREL_MAIN" && sheetTitle == "Titles")
             {
                 return "Plural";
             }
 
-            //make sure to return orig for all the other texts you dont want to change
+            // make sure to return orig for all the other texts you dont want to change
             return orig;
         }
 
-        //Load settings from past session into current session
+        // Load settings from past session into current session
         void IGlobalSettings<GlobalSettings>.OnLoadGlobal(GlobalSettings s)
         {
             GS = s;
         }
 
-        //Save settings from current session
+        // Save settings from current session
         GlobalSettings IGlobalSettings<GlobalSettings>.OnSaveGlobal()
         {
             return GS;
@@ -95,18 +95,18 @@ namespace CarThingMod
 
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggleDelegates)
         {
-            //return ModMenu.CreateMenuScreen(modListMenu).Build();
-            //Create a new MenuRef if it's not null
+            // return ModMenu.CreateMenuScreen(modListMenu).Build();
+            // Create a new MenuRef if it's not null
             MenuRef ??= new Menu(
-                name: "Car Thing Mod", //the title of the menu screen, it will appear on the top center of the screen 
+                name: "Car Thing Mod", // the title of the menu screen, it will appear on the top center of the screen 
                 elements: new Element[]
                 {
-                    //Text - Settings title
+                    // Text - Settings title
                     new TextPanel(
                         name: "Settings",
                         fontSize: 60),
 
-                    //Bool - Spawn car on nail swing
+                    // Bool - Spawn car on nail swing
                     new HorizontalOption(
                         name: "Spawn Car On Nail Swing?",
                         description: "Should a car spawn when the player swings the nail?",
@@ -114,33 +114,33 @@ namespace CarThingMod
                         Id: "spawnOnSwing",
                         applySetting: index =>
                         {
-                            GS.spawnCarOnSwing = index == 0; //"yes" is the 0th index in the values array
+                            GS.spawnCarOnSwing = index == 0; // "yes" is the 0th index in the values array
                         },
-                        loadSetting: () => GS.spawnCarOnSwing ? 0 : 1), //return 0 ("Yes") if active and 1 ("No") if false
+                        loadSetting: () => GS.spawnCarOnSwing ? 0 : 1), // return 0 ("Yes") if active and 1 ("No") if false
                     
-                    //Keybind - Spawn car key
+                    // Keybind - Spawn car key
                     new KeyBind(
                         name: "Spawn car",
                         Id: "carKey",
                         playerAction: GS.KeyBinds.spawnCar),
 
-                    //Keybind - Delete all cars key
+                    // Keybind - Delete all cars key
                     new KeyBind(
                         name: "Delete all cars",
                         Id: "carDeleteKey",
                         playerAction: GS.KeyBinds.deleteAllCars),
 
-                    //Text - Physics title
+                    // Text - Physics title
                     new TextPanel(
                         name: "Physics",
                         fontSize: 60),
 
-                    //Text - Forces header
+                    // Text - Forces header
                     new TextPanel(
                         name: "Forces",
                         fontSize: 40),
 
-                    //Float - Car horizontal force when nail is swung
+                    // Float - Car horizontal force when nail is swung
                     new CustomSlider(
                         name: "Car X force on swing",
                         Id: "swingXForce",
@@ -148,12 +148,12 @@ namespace CarThingMod
                         {
                             GS.swingForceX = val;
                         },
-                        loadValue: () => GS.swingForceX, //to load the value on menu creation
+                        loadValue: () => GS.swingForceX, // to load the value on menu creation
                         minValue: -100,
                         maxValue: 100,
                         wholeNumbers: true),
 
-                    //Float - Car vertical force when nail is swung
+                    // Float - Car vertical force when nail is swung
                     new CustomSlider(
                         name: "Car Y force on swing",
                         Id: "swingYForce",
@@ -161,12 +161,12 @@ namespace CarThingMod
                         {
                             GS.swingForceY = val;
                         },
-                        loadValue: () => GS.swingForceY, //to load the value on menu creation
+                        loadValue: () => GS.swingForceY, // to load the value on menu creation
                         minValue: -100,
                         maxValue: 100,
                         wholeNumbers: true),
 
-                    //Float - Car horizontal force when key is pressed
+                    // Float - Car horizontal force when key is pressed
                     new CustomSlider(
                         name: "Car X force on key press",
                         Id: "keyXForce",
@@ -174,12 +174,12 @@ namespace CarThingMod
                         {
                             GS.keyForceX = val;
                         },
-                        loadValue: () => GS.keyForceX, //to load the value on menu creation
+                        loadValue: () => GS.keyForceX, // to load the value on menu creation
                         minValue: -100,
                         maxValue: 100,
                         wholeNumbers: true),
 
-                    //Float - Car horizontal force when key is pressed
+                    // Float - Car horizontal force when key is pressed
                     new CustomSlider(
                         name: "Car Y force on key press",
                         Id: "keyYForce",
@@ -187,17 +187,17 @@ namespace CarThingMod
                         {
                             GS.keyForceY = val;
                         },
-                        loadValue: () => GS.keyForceY, //to load the value on menu creation
+                        loadValue: () => GS.keyForceY, // to load the value on menu creation
                         minValue: -100,
                         maxValue: 100,
                         wholeNumbers: true),
 
-                    //Text - Properties header
+                    // Text - Properties header
                     new TextPanel(
                         name: "Physical Properties",
                         fontSize: 40),
 
-                    //Float - Car mass
+                    // Float - Car mass
                     new CustomSlider(
                         name: "Car mass",
                         Id: "mass",
@@ -205,12 +205,12 @@ namespace CarThingMod
                         {
                             GS.carMass = val;
                         },
-                        loadValue: () => GS.carMass, //to load the value on menu creation
+                        loadValue: () => GS.carMass, // to load the value on menu creation
                         minValue: 0.1f,
                         maxValue: 25,
                         wholeNumbers: false),
 
-                    //Float - Car drag
+                    // Float - Car drag
                     new CustomSlider(
                         name: "Car drag",
                         Id: "drag",
@@ -218,12 +218,12 @@ namespace CarThingMod
                         {
                             GS.carDrag = val;
                         },
-                        loadValue: () => GS.carDrag, //to load the value on menu creation
+                        loadValue: () => GS.carDrag, // to load the value on menu creation
                         minValue: 0,
                         maxValue: 10,
                         wholeNumbers: false),
 
-                    //Float - Car angular drag
+                    // Float - Car angular drag
                     new CustomSlider(
                         name: "Car angular drag",
                         Id: "angularDrag",
@@ -231,12 +231,12 @@ namespace CarThingMod
                         {
                             GS.carAngularDrag = val;
                         },
-                        loadValue: () => GS.carAngularDrag, //to load the value on menu creation
+                        loadValue: () => GS.carAngularDrag, // to load the value on menu creation
                         minValue: 0,
                         maxValue: 2.5f,
                         wholeNumbers: false),
 
-                    //Float - Car friction
+                    // Float - Car friction
                     new CustomSlider(
                         name: "Car friction",
                         Id: "friction",
@@ -244,12 +244,12 @@ namespace CarThingMod
                         {
                             GS.carFriction = val;
                         },
-                        loadValue: () => GS.carFriction, //to load the value on menu creation
+                        loadValue: () => GS.carFriction, // to load the value on menu creation
                         minValue: 0,
                         maxValue: 1,
                         wholeNumbers: false),
 
-                    //Float - Car bounciness
+                    // Float - Car bounciness
                     new CustomSlider(
                         name: "Car bounciness",
                         Id: "bounciness",
@@ -257,12 +257,12 @@ namespace CarThingMod
                         {
                             GS.carBounciness = val;
                         },
-                        loadValue: () => GS.carBounciness, //to load the value on menu creation
+                        loadValue: () => GS.carBounciness, // to load the value on menu creation
                         minValue: 0,
                         maxValue: 1,
                         wholeNumbers: false),
 
-                    //Float - Scale X
+                    // Float - Scale X
                     new CustomSlider(
                         name: "Car scale X",
                         Id: "scaleX",
@@ -270,12 +270,12 @@ namespace CarThingMod
                         {
                             GS.carScaleX = val;
                         },
-                        loadValue: () => GS.carScaleX, //to load the value on menu creation
+                        loadValue: () => GS.carScaleX, // to load the value on menu creation
                         minValue: 0.1f,
                         maxValue: 5,
                         wholeNumbers: false),
 
-                    //Float - Scale Y
+                    // Float - Scale Y
                     new CustomSlider(
                         name: "Car scale Y",
                         Id: "scaleY",
@@ -283,18 +283,18 @@ namespace CarThingMod
                         {
                             GS.carScaleY = val;
                         },
-                        loadValue: () => GS.carScaleY, //to load the value on menu creation
+                        loadValue: () => GS.carScaleY, // to load the value on menu creation
                         minValue: 0.1f,
                         maxValue: 5,
                         wholeNumbers: false),
 
-                    //Text - Advanced header
+                    // Text - Advanced header
                     new TextPanel(
                         name: "Advanced",
                         fontSize: 60),
 
-                    //Bool - Use continuous collision detection
-                    //Having this on means the cars can't clip through walls, but it uses more performance
+                    // Bool - Use continuous collision detection
+                    // Having this on means the cars can't clip through walls, but it uses more performance
                     new HorizontalOption(
                         name: "Use continuous collision?",
                         description: "If yes, cars can't clip through walls, but the game might lag",
@@ -302,17 +302,17 @@ namespace CarThingMod
                         Id: "continuousCol",
                         applySetting: index =>
                         {
-                            GS.useContinuousCollision = index == 0; //"yes" is the 0th index in the values array
+                            GS.useContinuousCollision = index == 0; // "yes" is the 0th index in the values array
                         },
-                        loadSetting: () => GS.useContinuousCollision ? 0 : 1), //return 0 ("Yes") if active and 1 ("No") if false
+                        loadSetting: () => GS.useContinuousCollision ? 0 : 1), // return 0 ("Yes") if active and 1 ("No") if false
 
-                    //Button - Reset to default values
+                    // Button - Reset to default values
                     /*new MenuButton(
                         name: "Reset to default",
                         description: "Resets each value to their default value",
                         submitAction: (_) =>
                         {
-                            //Find element by Id
+                            // Find element by Id
                             Element elem = MenuRef.Find("spawnOnSwing");
                             MenuButton buttonElem = elem as MenuButton;
                             buttonElem.Update();
@@ -320,8 +320,8 @@ namespace CarThingMod
                 }
             );
 
-            //uses the GetMenuScreen function to return a menuscreen that MAPI can use. 
-            //The "modlistmenu" that is passed into the parameter can be any menuScreen that you want to return to when "Back" button or "esc" key is pressed 
+            // uses the GetMenuScreen function to return a menuscreen that MAPI can use. 
+            // The "modlistmenu" that is passed into the parameter can be any menuScreen that you want to return to when "Back" button or "esc" key is pressed 
             return MenuRef.GetMenuScreen(modListMenu);
         }
 

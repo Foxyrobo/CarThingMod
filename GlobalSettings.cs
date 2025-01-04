@@ -9,16 +9,16 @@ namespace CarThingMod
 {
     public class GlobalSettings
     {
-        //Bools
+        // Bools
         public bool spawnCarOnSwing = true;
 
-        //Forces
-        public float swingForceX = 30f; //Horizontal force of car when nail is swung
-        public float swingForceY = 18f; //Vertical force of car when nail is swung
-        public float keyForceX = 0f; //Horizontal force of car when key is pressed
-        public float keyForceY = 0f; //Vertical force of car when key is pressed
+        // Forces
+        public float swingForceX = 30f; // Horizontal force of car when nail is swung
+        public float swingForceY = 18f; // Vertical force of car when nail is swung
+        public float keyForceX = 0f; // Horizontal force of car when key is pressed
+        public float keyForceY = 0f; // Vertical force of car when key is pressed
 
-        //Physics
+        // Physics
         public float carMass = 1.5f;
         public float carDrag = 1f;
         public float carAngularDrag = 0.05f;
@@ -27,7 +27,10 @@ namespace CarThingMod
         public float carScaleX = 1.0f;
         public float carScaleY = 1.0f;
 
-        //Advanced
+        // Sprite settings
+        public float carPixelsPerUnit = 128f; //Changes the size of sprites. Smaller number = Larger sprite
+
+        // Advanced
         public bool useContinuousCollision = false;
 
         [JsonConverter(typeof(PlayerActionSetConverter))]
@@ -39,21 +42,21 @@ namespace CarThingMod
 
     public class KeyBinds: PlayerActionSet
     {
-        public PlayerAction spawnCar; //Key to spawn a car
-        public PlayerAction deleteAllCars; //Key to delete every car
+        public PlayerAction spawnCar; // Key to spawn a car
+        public PlayerAction deleteAllCars; // Key to delete every car
 
         public KeyBinds()
         {
-            //Set key name
+            // Set key name
             spawnCar = CreatePlayerAction("SpawnCar");
 
-            //Set default key
+            // Set default key
             spawnCar.AddDefaultBinding(Key.O);
 
-            //Set key name
+            // Set key name
             deleteAllCars = CreatePlayerAction("DeleteAllCars");
 
-            //Set default key
+            // Set default key
             deleteAllCars.AddDefaultBinding(Key.P);
         }
     }
