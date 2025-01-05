@@ -5,6 +5,8 @@ using Modding;
 using UnityEngine;
 using System.IO;
 using Satchel.BetterMenus;
+using Satchel;
+using static Mono.Security.X509.X520;
 
 namespace CarThingMod
 {
@@ -12,17 +14,58 @@ namespace CarThingMod
     {
         internal static GlobalSettings GS = new GlobalSettings();
         new public string GetName() => "Car Thing Mod";
+
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.1.4";
+        public override string GetVersion() => "1.2.3.1";
+
+        internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(), 
+            Constants.CAR_FOLDER_NAME);
+        internal static List<Texture2D> carTextures = new List<Texture2D>();
+        internal static bool customCarsFound = false;
 
         Menu MenuRef;
 
         public override void Initialize()
         {
+            // Subscribe to events
             ModHooks.AttackHook += ModHooks_AttackHook;
             On.HeroController.Awake += new On.HeroController.hook_Awake(this.OnHeroControllerAwake);
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             ModHooks.LanguageGetHook += LanguageGet;
+
+            // Make sure there is a directory for car images
+            IoUtils.EnsureDirectory(carDirectory);
+
+            // Load all car textures
+            LoadCars();
+        }
+
+        /// <summary>
+        /// Loads in each car texture found in the car folder.
+        /// This code was taken from the Hat mod by Prashant Mohta
+        /// https://github.com/PrashantMohta/hat.hollowknight/
+        /// </summary>
+        public void LoadCars()
+        {
+            // Iterate through each car image in the proper directory
+            foreach (string carpng in Directory.GetFiles(carDirectory, $"*{Constants.DEFAULT_IMAGE_EXTENSION}"))
+            {
+                // Load each texture from the file, and then add it to the list of textures
+                carTextures.Add(TextureUtils.LoadTextureFromFile(Path.Combine(carDirectory, carpng)));
+
+                // Make sure it's known that there are custom cars
+                customCarsFound = true;
+            }
+
+            // Logging statements
+            if (customCarsFound)
+            {
+                Modding.Logger.Log("[CarThingMod] " + carTextures.Count + " custom cars were found!");
+            }
+            else
+            {
+                Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default sprite");
+            }
         }
 
         // Called when the player swings the nail

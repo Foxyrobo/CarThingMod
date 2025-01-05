@@ -16,9 +16,10 @@ using IL;
 namespace CarThingMod;
 public class CarHandler : MonoBehaviour
 {
+	int currentCarIndex = 0; // Index in carTextures
+
     private static GameObject carPrefab;
 	private GameObject carObject;
-	private tk2dSpriteCollectionData carSpriteCollection;
 	List<GameObject> cars;
 
 	void Start()
@@ -150,12 +151,35 @@ public class CarHandler : MonoBehaviour
         SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
 
 		// Load sprite from resources
-        Sprite spr;
-        spr = Satchel.AssemblyUtils.GetSpriteFromResources
-			("CarThingMod.Resources.CarImage2.png", CarThingMod.GS.carPixelsPerUnit);
+		Sprite spr = GetNextSprite();
+   //     spr = Satchel.AssemblyUtils.GetSpriteFromResources
+			//("CarThingMod.Resources.CarImage2.png", CarThingMod.GS.carPixelsPerUnit);
 
 		// Set filterMode and sprite for the gameObject
         spr.texture.filterMode = filterMode;
         spriteRenderer.sprite = spr;
     }
+
+	Sprite GetNextSprite()
+	{
+		// Check if any custom cars have been found
+		if (CarThingMod.customCarsFound)
+		{
+			// Cycle through custom cars
+			Texture2D texture = CarThingMod.carTextures[currentCarIndex];
+            Sprite spr = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), 
+				new Vector2(0.5f, 0.5f), CarThingMod.GS.carPixelsPerUnit, 0, SpriteMeshType.FullRect);
+
+            // Increment index
+            currentCarIndex++;
+			if (currentCarIndex >= CarThingMod.carTextures.Count) currentCarIndex = 0;
+
+			return spr;
+		}
+		else
+		{
+			// Use default car
+			return Satchel.AssemblyUtils.GetSpriteFromResources(Constants.DEFAULT_CAR);
+		}
+	}
 }
