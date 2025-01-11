@@ -28,7 +28,7 @@ namespace CarThingMod
         public float carScaleY = 1.0f;
 
         // Sprite settings
-        public float carPixelsPerUnit = 128f; //Changes the size of sprites. Smaller number = Larger sprite
+        public float carPixelsPerUnit = 64f; //Changes the size of sprites. Smaller number = Larger sprite
 
         // Advanced
         public bool useContinuousCollision = false;

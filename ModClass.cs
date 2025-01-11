@@ -16,10 +16,15 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.3.1";
+        public override string GetVersion() => "1.2.4.2";
 
-        internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(), 
+        // Directories
+        internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
             Constants.CAR_FOLDER_NAME);
+        internal string sampleDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
+            Constants.SAMPLE_FOLDER_NAME);
+        internal string sampleCopyDirectory = Constants.SAMPLE_FOLDER_COPY;
+
         internal static List<Texture2D> carTextures = new List<Texture2D>();
         internal static bool customCarsFound = false;
 
@@ -36,8 +41,37 @@ namespace CarThingMod
             // Make sure there is a directory for car images
             IoUtils.EnsureDirectory(carDirectory);
 
+            // Make sure sample files exist
+            EnsureSampleFiles();
+
             // Load all car textures
             LoadCars();
+        }
+
+        /// <summary>
+        /// Ensures that the sample files for custom cars exist
+        /// </summary>
+        void EnsureSampleFiles()
+        {
+            Modding.Logger.Log("[CarThingMod] carDirectory: " + carDirectory);
+            Modding.Logger.Log("[CarThingMod] sampleDirectory: " + sampleDirectory);
+            Modding.Logger.Log("[CarThingMod] sampleCopyDirectory: " + sampleCopyDirectory);
+
+            // Check if the directory exists
+            if (!IoUtils.DirectoryExists(sampleDirectory))
+            {
+                // If it doesn't, copy over the sample folder
+                //IoUtils.DirectoryCopyAllFiles(sampleCopyDirectory, carDirectory);
+
+                // Make sure the sample car is there
+                var sampleCarPath = Path.Combine(sampleDirectory, Constants.SAMPLE_CAR);
+                if (!File.Exists(sampleCarPath))
+                {
+                    // TODO - Add sample car file
+                }
+
+                Modding.Logger.Log("[CarThingMod] Creating sample file directory");
+            }
         }
 
         /// <summary>
