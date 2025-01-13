@@ -16,7 +16,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.4.9";
+        public override string GetVersion() => "1.2.4.11";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -53,19 +53,17 @@ namespace CarThingMod
         /// </summary>
         void EnsureSampleFiles()
         {
-            // Make sure the directory exists
+            // Ensure the directory exists
             IoUtils.EnsureDirectory(sampleDirectory);
 
-            // Make sure the sample car is there
-            var sampleCarPath = Path.Combine(sampleDirectory, Constants.SAMPLE_CAR);
-            if (!File.Exists(sampleCarPath))
-            {
-                // Add sample car file
-                File.WriteAllBytes(sampleCarPath, 
-                    Satchel.AssemblyUtils.GetBytesFromResources(Constants.SAMPLE_CAR));
+            // Ensure the sample car is there
+            Utils.CopyFromResources(sampleDirectory, Constants.SAMPLE_CAR, "sample car");
 
-                Modding.Logger.Log("[CarThingMod] Created sample car at " + sampleDirectory);
-            }
+            // Ensure the sample settings text doc is there
+            Utils.CopyFromResources(sampleDirectory, Constants.SAMPLE_TXT, "sample settings text doc");
+
+            // Ensure the instructions are there
+            Utils.CopyFromResources(sampleDirectory, Constants.SAMPLE_INSTRUCTIONS, "custom car instructions");
         }
 
         /// <summary>
