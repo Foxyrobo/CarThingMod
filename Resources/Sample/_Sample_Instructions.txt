@@ -1,0 +1,27 @@
+--------
+	Welcome to the custom car creator! Here, you can add any image you'd like as a custom car!
+--------
+
+
+--------
+Instructions:
+
+	1. Add any .png image to the cars folder (so not this folder, but the one below it)
+	2. Add a .txt file with the same name as the image
+	  Ex: "coolCar.png" and "coolCar.txt"
+	3. Format the .txt file the same way that the "Sample_Car.txt" is formatted. This is the settings file for the car (more info below).
+--------
+
+
+--------
+Settings:
+
+	Each car should have a settings file with the same name as the image (explained in parts 2 and 3 in the instructions up above).
+	The following settings can be changed:
+
+	1. colXSize - The horizontal size of the car's collider. Every car uses a basic BoxCollider2D. Default: 1.2
+	2. colYSize - The vertical size of the car's collider. Default: 0.7
+	3. colXOffset - How far off from the center of the car should the collider be (on the X axis). Default: 0
+	4. colYOffset - How far off from the center of the car should the collider be (on the Y axis). Default: 0
+	5. pixelsPerUnit - How many pixels (horizontally and vertically) should occupy one unit of space. Default: 64
+--------
