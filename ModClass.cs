@@ -6,7 +6,7 @@ using UnityEngine;
 using System.IO;
 using Satchel.BetterMenus;
 using Satchel;
-using static Mono.Security.X509.X520;
+using System.Reflection;
 
 namespace CarThingMod
 {
@@ -16,7 +16,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.4.2";
+        public override string GetVersion() => "1.2.4.9";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -53,24 +53,18 @@ namespace CarThingMod
         /// </summary>
         void EnsureSampleFiles()
         {
-            Modding.Logger.Log("[CarThingMod] carDirectory: " + carDirectory);
-            Modding.Logger.Log("[CarThingMod] sampleDirectory: " + sampleDirectory);
-            Modding.Logger.Log("[CarThingMod] sampleCopyDirectory: " + sampleCopyDirectory);
+            // Make sure the directory exists
+            IoUtils.EnsureDirectory(sampleDirectory);
 
-            // Check if the directory exists
-            if (!IoUtils.DirectoryExists(sampleDirectory))
+            // Make sure the sample car is there
+            var sampleCarPath = Path.Combine(sampleDirectory, Constants.SAMPLE_CAR);
+            if (!File.Exists(sampleCarPath))
             {
-                // If it doesn't, copy over the sample folder
-                //IoUtils.DirectoryCopyAllFiles(sampleCopyDirectory, carDirectory);
+                // Add sample car file
+                File.WriteAllBytes(sampleCarPath, 
+                    Satchel.AssemblyUtils.GetBytesFromResources(Constants.SAMPLE_CAR));
 
-                // Make sure the sample car is there
-                var sampleCarPath = Path.Combine(sampleDirectory, Constants.SAMPLE_CAR);
-                if (!File.Exists(sampleCarPath))
-                {
-                    // TODO - Add sample car file
-                }
-
-                Modding.Logger.Log("[CarThingMod] Creating sample file directory");
+                Modding.Logger.Log("[CarThingMod] Created sample car at " + sampleDirectory);
             }
         }
 
