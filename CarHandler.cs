@@ -145,28 +145,11 @@ public class CarHandler : MonoBehaviour
         // Get the spriteRenderer from object
         SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
 
-		// Load the next sprite
-		Sprite spr = GetNextSprite();
+        // Load the next sprite
+		Sprite spr = CarThingMod.carList[currentCarIndex].carSprite;
 
 		// Set filterMode and sprite for the gameObject
-        spr.texture.filterMode = filterMode;
+		spr.texture.filterMode = filterMode;
         spriteRenderer.sprite = spr;
     }
-
-	Sprite GetNextSprite()
-	{
-		// Check if any custom cars have been found
-		if (CarThingMod.customCarsFound)
-		{
-			// Get the next sprite
-			Sprite spr = CarThingMod.carList[currentCarIndex].carSprite;
-
-			return spr;
-		}
-		else
-		{
-			// Use default car
-			return Satchel.AssemblyUtils.GetSpriteFromResources(Constants.DEFAULT_CAR);
-		}
-	}
 }

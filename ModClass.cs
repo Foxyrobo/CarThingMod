@@ -15,7 +15,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.6.4";
+        public override string GetVersion() => "1.2.7.6";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -92,7 +92,7 @@ namespace CarThingMod
             }
 
             // Iterate through each texture/text pair
-            if (carpngs.Length > 0)
+            if (carpngs.Length > 0 && cartxts.Length > 0)
             {
                 // Make it known that custom cars were found
                 customCarsFound = true;
@@ -122,16 +122,33 @@ namespace CarThingMod
                     }
                 }
             }
+            else
+            {
+                // If there are no custom cars, create a default car
+                CarClass defaultCar = new CarClass(GS.defaultColSizeX,
+                    GS.defaultColSizeY, GS.defaultColOffsetX,
+                    GS.defaultColOffsetY, GS.defaultPixelsPerUnit,
+                    AssemblyUtils.GetSpriteFromResources(Constants.DEFAULT_CAR, 
+                    GS.defaultPixelsPerUnit));
+
+                // Add car to list
+                carList.Add(defaultCar); 
+            }
 
             // Logging statements
-            if (customCarsFound)
+            if (customCarsFound && carpngs.Length == 1)
+            {
+                Modding.Logger.Log("[CarThingMod] 1 custom car was found!",
+                    GS.LogLevel);
+            }
+            else if (customCarsFound && carpngs.Length > 1)
             {
                 Modding.Logger.Log("[CarThingMod] " + carpngs.Length + " custom cars were found!",
                     GS.LogLevel);
             }
             else
             {
-                Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default sprite",
+                Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default car!",
                     GS.LogLevel);
             }
         }

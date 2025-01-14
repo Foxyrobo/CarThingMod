@@ -6,7 +6,7 @@
         internal static string CAR_FOLDER_NAME = "Cars";
         internal static string DEFAULT_IMAGE_EXTENSION = ".png";
         internal static string DEFAULT_TEXT_EXTENSION = ".txt";
-        internal static string DEFAULT_CAR = "CarThingMod\\Resources\\Sample\\Sample_Car.png";
+        internal static string DEFAULT_CAR = "CarThingMod.Resources.Sample.Sample_Car.png";
 
         // Samples
         internal static string SAMPLE_FOLDER_NAME = "Cars\\Sample";
