@@ -15,7 +15,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.6.3";
+        public override string GetVersion() => "1.2.6.4";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -114,7 +114,9 @@ namespace CarThingMod
                         {
                             // Create a new car
                             CarClass newCar = Utils.CreateCar(png, txt, carDirectory);
-                            carList.Add(newCar);
+
+                            // Error checking - If it's null, skip
+                            if (newCar != null) carList.Add(newCar);
                             continue;
                         }
                     }

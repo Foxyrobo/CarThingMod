@@ -31,6 +31,15 @@ namespace CarThingMod
 			}
 		}
 
+        /// <summary>
+        /// Creates a new CarClass based on a filepath for the texture, settings, 
+        /// and car folder.
+        /// Returns a CarClass if successful. Otherwise returns null.
+        /// </summary>
+        /// <param name="texturePath"></param>
+        /// <param name="settingsPath"></param>
+        /// <param name="carDirectory"></param>
+        /// <returns></returns>
 		internal static CarClass CreateCar(string texturePath, string settingsPath, string carDirectory)
 		{
 			// Get the texture from file
@@ -58,29 +67,40 @@ namespace CarThingMod
 			string ppuName = "pixelsPerUnit: ";
 
             // ----- Parse settings file -----
+            try
+            {
+                // Collider size X
+                colSizeX = ParseFloat(colSizeXName, ref settings);
 
-            // Collider size X
-            colSizeX = ParseFloat(colSizeXName, ref settings);
+                // Collider size Y
+                colSizeY = ParseFloat(colSizeYName, ref settings);
 
-            // Collider size Y
-            colSizeY = ParseFloat(colSizeYName, ref settings);
+                // Offset X
+                offsetX = ParseFloat(offsetXName, ref settings);
 
-            // Offset X
-            offsetX = ParseFloat(offsetXName, ref settings);
+                // Offset Y
+                offsetY = ParseFloat(offsetYName, ref settings);
 
-            // Offset Y
-            offsetY = ParseFloat(offsetYName, ref settings);
+                // Pixels per unit
+                ppu = ParseFloat(ppuName, ref settings);
 
-            // Pixels per unit
-            ppu = ParseFloat(ppuName, ref settings);
+                // Get sprite from texture
+                Sprite spr = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f), ppu, 0, SpriteMeshType.FullRect);
 
-            // Get sprite from texture
-            Sprite spr = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f), ppu, 0, SpriteMeshType.FullRect);
+                // Create and return final car
+                CarClass car = new CarClass(colSizeX, colSizeY, offsetX, offsetY, ppu, spr);
+                return car;
+            }
+            catch
+            {
+                // An error likely means the settings file was formatted incorrectly
+                Modding.Logger.LogError("[CarThingMod] Settings file " + settingsPath 
+                    + ".txt was formatted incorrectly!");
 
-			// Create and return final car
-            CarClass car = new CarClass(colSizeX, colSizeY, offsetX, offsetY, ppu, spr);
-			return car;
+                // Return a null car
+                return null;
+            }
         }
 
         /// <summary>
