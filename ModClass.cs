@@ -15,7 +15,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.7.7";
+        public override string GetVersion() => "1.2.8.1";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -71,6 +71,9 @@ namespace CarThingMod
         /// </summary>
         public void LoadCars()
         {
+            // Reset this
+            customCarsFound = false;
+
             // Find all car image and text files
             string[] carpngs = Directory.GetFiles(carDirectory, $"*{Constants.DEFAULT_IMAGE_EXTENSION}");
             string[] cartxts = Directory.GetFiles(carDirectory, $"*{Constants.DEFAULT_TEXT_EXTENSION}");
@@ -92,6 +95,7 @@ namespace CarThingMod
             }
 
             // Iterate through each texture/text pair
+            int validCars = 0;
             if (carpngs.Length > 0 && cartxts.Length > 0)
             {
                 // Iterate through all car pngs
@@ -113,7 +117,11 @@ namespace CarThingMod
                             CarClass newCar = Utils.CreateCar(png, txt, carDirectory);
 
                             // Error checking - If it's null, skip
-                            if (newCar != null) carList.Add(newCar);
+                            if (newCar != null)
+                            {
+                                carList.Add(newCar);
+                                validCars++;
+                            }
                             continue;
                         }
                     }
@@ -128,14 +136,14 @@ namespace CarThingMod
             }
 
             // Logging statements
-            if (customCarsFound && carpngs.Length == 1)
+            if (customCarsFound && validCars == 1)
             {
                 Modding.Logger.Log("[CarThingMod] 1 custom car was found!",
                     GS.LogLevel);
             }
-            else if (customCarsFound && carpngs.Length > 1)
+            else if (customCarsFound && validCars > 1)
             {
-                Modding.Logger.Log("[CarThingMod] " + carpngs.Length + " custom cars were found!",
+                Modding.Logger.Log("[CarThingMod] " + validCars + " custom cars were found!",
                     GS.LogLevel);
             }
             else
