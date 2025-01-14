@@ -15,7 +15,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.7.6";
+        public override string GetVersion() => "1.2.7.7";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -94,9 +94,6 @@ namespace CarThingMod
             // Iterate through each texture/text pair
             if (carpngs.Length > 0 && cartxts.Length > 0)
             {
-                // Make it known that custom cars were found
-                customCarsFound = true;
-
                 // Iterate through all car pngs
                 foreach (var png in carpngs)
                 {
@@ -122,17 +119,12 @@ namespace CarThingMod
                     }
                 }
             }
-            else
-            {
-                // If there are no custom cars, create a default car
-                CarClass defaultCar = new CarClass(GS.defaultColSizeX,
-                    GS.defaultColSizeY, GS.defaultColOffsetX,
-                    GS.defaultColOffsetY, GS.defaultPixelsPerUnit,
-                    AssemblyUtils.GetSpriteFromResources(Constants.DEFAULT_CAR, 
-                    GS.defaultPixelsPerUnit));
 
-                // Add car to list
-                carList.Add(defaultCar); 
+            // Check if any cars were actually created
+            if (carList.Count > 0)
+            {
+                // Make it known that custom cars were found
+                customCarsFound = true;
             }
 
             // Logging statements
@@ -150,6 +142,16 @@ namespace CarThingMod
             {
                 Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default car!",
                     GS.LogLevel);
+
+                // If there are no custom cars, create a default car
+                CarClass defaultCar = new CarClass(GS.defaultColSizeX,
+                    GS.defaultColSizeY, GS.defaultColOffsetX,
+                    GS.defaultColOffsetY, GS.defaultPixelsPerUnit,
+                    AssemblyUtils.GetSpriteFromResources(Constants.DEFAULT_CAR,
+                    GS.defaultPixelsPerUnit));
+
+                // Add car to list
+                carList.Add(defaultCar);
             }
         }
 
