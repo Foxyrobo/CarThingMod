@@ -14,9 +14,9 @@
     <AssemblyTitle>CarThingMod</AssemblyTitle>
     <Product>CarThingMod</Product>
     <Description>A mod that spawns a car when the player swings their nail</Description>
-    <Copyright>Copyright ©  2024</Copyright>
-    <AssemblyVersion>1.1.1.1</AssemblyVersion>
-    <FileVersion>1.1.1.1</FileVersion>
+    <Copyright>Copyright ©  2025</Copyright>
+    <AssemblyVersion>1.2.6.4</AssemblyVersion>
+    <FileVersion>1.2.6.4</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
