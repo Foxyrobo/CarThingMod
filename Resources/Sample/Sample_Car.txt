@@ -2,4 +2,4 @@ colXSize: 1.2
 colYSize: 0.7
 colXOffset: 0
 colYOffset: 0
-pixelsPerUnit: 64
+pixelsPerUnit: 128
