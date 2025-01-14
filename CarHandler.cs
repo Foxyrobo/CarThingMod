@@ -58,12 +58,6 @@ public class CarHandler : MonoBehaviour
         Modding.Logger.Log("[CarThingMod] Sucessfully deleted every car!", CarThingMod.GS.LogLevel);
     }
 
-	//IEnumerator CreateCarAnimation(float forceX, float forceY)
-	//{ 
- //       GameObject car = SpawnCarFromKnight(forceX, forceY);
- //       yield break;
- //   }
-
 	GameObject SpawnCarFromKnight(float forceX, float forceY)
 	{
 		// Hollow Knight direction (horizontal)
@@ -82,6 +76,12 @@ public class CarHandler : MonoBehaviour
 		carObject.SetActive(true);
 		// carObject.layer = (int)PhysLayers.TERRAIN;
 		carObject.layer = 0;
+
+        // Collider changes
+        BoxCollider2D carCol = carObject.GetComponent<BoxCollider2D>();
+        CarClass currentCar = CarThingMod.carList[currentCarIndex];
+        carCol.size = new Vector2(currentCar.colSizeX, currentCar.colSizeY);
+        carCol.offset = new Vector2(currentCar.colOffsetX, currentCar.colOffsetY);
 
         // Change the object's physics material
         PhysicsMaterial2D physMat = new PhysicsMaterial2D();
@@ -107,7 +107,11 @@ public class CarHandler : MonoBehaviour
 		// Add car to list
 		cars.Add(carObject);
 
-		return carObject;
+        // Increment index (used for sprites and collision)
+        currentCarIndex++;
+        if (currentCarIndex >= CarThingMod.carList.Count) currentCarIndex = 0;
+
+        return carObject;
 	}
 
 	IEnumerator CreateCarPrefab()
@@ -128,11 +132,6 @@ public class CarHandler : MonoBehaviour
 			typeof(SpriteRenderer)
 		);
 
-        // Collider changes
-        BoxCollider2D carCol = carPrefab.GetComponent<BoxCollider2D>();
-		carCol.size = new Vector2(1.2f, 0.7f);
-		carCol.offset = new Vector2(0.0f, 0.0f);
-
 		// FSM seems some hollow knight specific
         // Adding this so it appears blue on debug mod
         // https://github.com/TheMulhima/HollowKnight.DebugMod/blob/master/Source/Hitbox/HitboxRender.cs#L103
@@ -150,10 +149,8 @@ public class CarHandler : MonoBehaviour
         // Get the spriteRenderer from object
         SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
 
-		// Load sprite from resources
+		// Load the next sprite
 		Sprite spr = GetNextSprite();
-   //     spr = Satchel.AssemblyUtils.GetSpriteFromResources
-			//("CarThingMod.Resources.CarImage2.png", CarThingMod.GS.carPixelsPerUnit);
 
 		// Set filterMode and sprite for the gameObject
         spr.texture.filterMode = filterMode;
@@ -165,14 +162,8 @@ public class CarHandler : MonoBehaviour
 		// Check if any custom cars have been found
 		if (CarThingMod.customCarsFound)
 		{
-			// Cycle through custom cars
-			Texture2D texture = CarThingMod.carTextures[currentCarIndex];
-            Sprite spr = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), 
-				new Vector2(0.5f, 0.5f), CarThingMod.GS.carPixelsPerUnit, 0, SpriteMeshType.FullRect);
-
-            // Increment index
-            currentCarIndex++;
-			if (currentCarIndex >= CarThingMod.carTextures.Count) currentCarIndex = 0;
+			// Get the next sprite
+			Sprite spr = CarThingMod.carList[currentCarIndex].carSprite;
 
 			return spr;
 		}

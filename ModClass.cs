@@ -6,7 +6,6 @@ using UnityEngine;
 using System.IO;
 using Satchel.BetterMenus;
 using Satchel;
-using System.Reflection;
 
 namespace CarThingMod
 {
@@ -16,7 +15,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.4.11";
+        public override string GetVersion() => "1.2.6.2";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -25,7 +24,8 @@ namespace CarThingMod
             Constants.SAMPLE_FOLDER_NAME);
         internal string sampleCopyDirectory = Constants.SAMPLE_FOLDER_COPY;
 
-        internal static List<Texture2D> carTextures = new List<Texture2D>();
+        //internal static List<Texture2D> carTextures = new List<Texture2D>();
+        internal static List<CarClass> carList = new List<CarClass>();
         internal static bool customCarsFound = false;
 
         Menu MenuRef;
@@ -38,7 +38,7 @@ namespace CarThingMod
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             ModHooks.LanguageGetHook += LanguageGet;
 
-            // Make sure there is a directory for car images
+            // Make sure there is a directory for car images and settings
             IoUtils.EnsureDirectory(carDirectory);
 
             // Make sure sample files exist
@@ -68,30 +68,86 @@ namespace CarThingMod
 
         /// <summary>
         /// Loads in each car texture found in the car folder.
-        /// This code was taken from the Hat mod by Prashant Mohta
-        /// https://github.com/PrashantMohta/hat.hollowknight/
         /// </summary>
         public void LoadCars()
         {
-            // Iterate through each car image in the proper directory
-            foreach (string carpng in Directory.GetFiles(carDirectory, $"*{Constants.DEFAULT_IMAGE_EXTENSION}"))
-            {
-                // Load each texture from the file, and then add it to the list of textures
-                carTextures.Add(TextureUtils.LoadTextureFromFile(Path.Combine(carDirectory, carpng)));
+            // Find all car image and text files
+            string[] carpngs = Directory.GetFiles(carDirectory, $"*{Constants.DEFAULT_IMAGE_EXTENSION}");
+            string[] cartxts = Directory.GetFiles(carDirectory, $"*{Constants.DEFAULT_TEXT_EXTENSION}");
 
-                // Make sure it's known that there are custom cars
+            // Make sure the number of pngs and txt files are the same
+            // 0 = the same
+            // Positive value = carpngs > cartxts
+            // Negative value = carpngs < cartxts
+            int diff = carpngs.Length - cartxts.Length;
+
+            // Give warnings
+            if (diff > 0)
+            {
+                Modding.Logger.LogWarn("[CarThingMod] More car textures were found than settings files!");
+            }
+            if (diff < 0)
+            {
+                Modding.Logger.LogWarn("[CarThingMod] More car settings files were found than textures!");
+            }
+
+            // Iterate through each texture/text pair
+            if (carpngs.Length > 0)
+            {
+                // Make it known that custom cars were found
                 customCarsFound = true;
+
+                // Iterate through all car pngs
+                foreach (var png in carpngs)
+                {
+                    // Temporary remove the file extension
+                    string pngNoExt = png.Substring(0, png.IndexOf(Constants.DEFAULT_IMAGE_EXTENSION));
+
+                    // Iterate through all car settings files
+                    foreach (var txt in cartxts)
+                    {
+                        // Temporary remove the file extension
+                        string txtNoExt = txt.Substring(0, txt.IndexOf(Constants.DEFAULT_TEXT_EXTENSION));
+
+                        // Compare them
+                        if (pngNoExt == txtNoExt)
+                        {
+                            Modding.Logger.Log("[CarThingMod] png name: " + pngNoExt);
+                            Modding.Logger.Log("[CarThingMod] txt name: " + txtNoExt);
+                            // Create a new car
+                            CarClass newCar = Utils.CreateCar(png, txt, carDirectory);
+                            carList.Add(newCar);
+                            continue;
+                        }
+                    }
+                }
             }
 
             // Logging statements
             if (customCarsFound)
             {
-                Modding.Logger.Log("[CarThingMod] " + carTextures.Count + " custom cars were found!");
+                Modding.Logger.Log("[CarThingMod] " + carpngs.Length + " custom cars were found!");
             }
             else
             {
                 Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default sprite");
             }
+        }
+
+        /// <summary>
+        /// Deletes all current car settings and re-loads them
+        /// </summary>
+        void RefreshCars()
+        {
+            // Delete current car settings
+            carList.Clear();
+
+            // Re-load all cars
+            IoUtils.EnsureDirectory(carDirectory); // Make sure the user didn't delete the directory
+            LoadCars();
+
+            // Logging
+            Modding.Logger.Log("[CarThingMod] Refreshed cars!");
         }
 
         // Called when the player swings the nail
@@ -375,17 +431,20 @@ namespace CarThingMod
                         },
                         loadSetting: () => GS.useContinuousCollision ? 0 : 1), // return 0 ("Yes") if active and 1 ("No") if false
 
-                    // Button - Reset to default values
-                    /*new MenuButton(
-                        name: "Reset to default",
-                        description: "Resets each value to their default value",
+                    // Button - Refresh car list
+                    new MenuButton(
+                        name: "Refresh cars",
+                        description: "Applies any changes made in the custom car folder",
+                        Id: "refreshButton",
                         submitAction: (_) =>
                         {
                             // Find element by Id
-                            Element elem = MenuRef.Find("spawnOnSwing");
+                            Element elem = MenuRef.Find("refreshButton");
                             MenuButton buttonElem = elem as MenuButton;
                             buttonElem.Update();
-                        })*/
+
+                            RefreshCars();
+                        })
                 }
             );
 
