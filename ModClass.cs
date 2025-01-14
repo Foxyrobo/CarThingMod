@@ -15,7 +15,7 @@ namespace CarThingMod
         new public string GetName() => "Car Thing Mod";
 
         // Version number: MAJOR.MINOR.PATCH.BUILD
-        public override string GetVersion() => "1.2.6.2";
+        public override string GetVersion() => "1.2.6.3";
 
         // Directories
         internal string carDirectory = Path.Combine(AssemblyUtils.getCurrentDirectory(),
@@ -112,8 +112,6 @@ namespace CarThingMod
                         // Compare them
                         if (pngNoExt == txtNoExt)
                         {
-                            Modding.Logger.Log("[CarThingMod] png name: " + pngNoExt);
-                            Modding.Logger.Log("[CarThingMod] txt name: " + txtNoExt);
                             // Create a new car
                             CarClass newCar = Utils.CreateCar(png, txt, carDirectory);
                             carList.Add(newCar);
@@ -126,11 +124,13 @@ namespace CarThingMod
             // Logging statements
             if (customCarsFound)
             {
-                Modding.Logger.Log("[CarThingMod] " + carpngs.Length + " custom cars were found!");
+                Modding.Logger.Log("[CarThingMod] " + carpngs.Length + " custom cars were found!",
+                    GS.LogLevel);
             }
             else
             {
-                Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default sprite");
+                Modding.Logger.Log("[CarThingMod] No custom cars were found! Reverting to default sprite",
+                    GS.LogLevel);
             }
         }
 
@@ -147,7 +147,7 @@ namespace CarThingMod
             LoadCars();
 
             // Logging
-            Modding.Logger.Log("[CarThingMod] Refreshed cars!");
+            Modding.Logger.Log("[CarThingMod] Refreshed cars!", GS.LogLevel);
         }
 
         // Called when the player swings the nail

@@ -38,8 +38,7 @@ public class CarHandler : MonoBehaviour
 	/// <param name="forceY"></param>
     public void Run(float forceX, float forceY)
 	{
-		Modding.Logger.Log("[CarThingMod] Spawn Car", CarThingMod.GS.LogLevel);
-        //StartCoroutine(CreateCarAnimation(forceX, forceY));
+		Modding.Logger.Log("[CarThingMod] Spawned car of index " + currentCarIndex, CarThingMod.GS.LogLevel);
         GameObject car = SpawnCarFromKnight(forceX, forceY);
     }
 
@@ -48,8 +47,6 @@ public class CarHandler : MonoBehaviour
 	/// </summary>
 	public void DeleteAllCars()
 	{
-		Modding.Logger.Log("[CarThingMod] Deleting all cars", CarThingMod.GS.LogLevel);
-
 		// Iterate through the list and delete each car
 		foreach (GameObject car in cars)
 		{
@@ -74,7 +71,6 @@ public class CarHandler : MonoBehaviour
 
 		// Make active
 		carObject.SetActive(true);
-		// carObject.layer = (int)PhysLayers.TERRAIN;
 		carObject.layer = 0;
 
         // Collider changes
